@@ -13,7 +13,7 @@ export class CdkLambdaCronStack extends cdk.Stack {
             runtime: Runtime.NODEJS_14_X,
             memorySize: 512,
             handler: 'cron.handler',
-            code: Code.fromAsset(path.join(__dirname, '../lambda-function')),
+            code: Code.fromAsset(path.join(__dirname, '../handlers')),
         })
 
         //Event rule which runs the job every five minutes
