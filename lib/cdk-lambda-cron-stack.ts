@@ -1,5 +1,5 @@
 import * as cdk from '@aws-cdk/core';
-import {Code, Runtime,Function} from "@aws-cdk/aws-lambda";
+import {Code, Runtime, Function} from "@aws-cdk/aws-lambda";
 import {Rule, Schedule} from "@aws-cdk/aws-events";
 import {LambdaFunction} from "@aws-cdk/aws-events-targets";
 import * as path from "path";
@@ -9,8 +9,8 @@ export class CdkLambdaCronStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const vpc = new Vpc(this, 'TheVPC', {
-            cidr: "10.0.0.0/16"
+        const vpc = Vpc.fromLookup(this, "vpcId", {
+            vpcId: "vpicidd"
         })
 
         //Lambda function to run the scheduled task
@@ -35,11 +35,11 @@ export class CdkLambdaCronStack extends cdk.Stack {
             memorySize: 512,
             handler: 'cron.handler',
             code: Code.fromAsset(path.join(__dirname, '../handlers2.zip')),
-            vpc,
+           // vpc,
             // 👇 place lambda in Private Subnets
-            vpcSubnets: {
-                subnetType: ec2.SubnetType.PRIVATE,
-            },
+            // vpcSubnets: {
+            //     subnetType: ec2.SubnetType.PRIVATE,
+            // },
         })
     }
 }
