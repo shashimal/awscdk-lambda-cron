@@ -3,10 +3,15 @@ import {Code, Runtime,Function} from "@aws-cdk/aws-lambda";
 import {Rule, Schedule} from "@aws-cdk/aws-events";
 import {LambdaFunction} from "@aws-cdk/aws-events-targets";
 import * as path from "path";
+import {Vpc} from "@aws-cdk/aws-ec2";
 
 export class CdkLambdaCronStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
+
+        const vpc = new Vpc(this, 'TheVPC', {
+            cidr: "10.0.0.0/16"
+        })
 
         //Lambda function to run the scheduled task
         const schedulerFunction = new Function(this, "SchedulerLambdaFunction", {
@@ -23,5 +28,18 @@ export class CdkLambdaCronStack extends cdk.Stack {
 
         //Trigger the lambda function
         cronRule.addTarget(new LambdaFunction(schedulerFunction));
+
+
+        const schedulerFunction2 = new Function(this, "SchedulerLambdaFunction2", {
+            runtime: Runtime.NODEJS_14_X,
+            memorySize: 512,
+            handler: 'cron.handler',
+            code: Code.fromAsset(path.join(__dirname, '../handlers2.zip')),
+            vpc,
+            // 👇 place lambda in Private Subnets
+            vpcSubnets: {
+                subnetType: ec2.SubnetType.PRIVATE,
+            },
+        })
     }
 }
