@@ -9,10 +9,6 @@ export class CdkLambdaCronStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
 
-        const vpc = Vpc.fromLookup(this, "vpcId", {
-            vpcId: "vpicidd"
-        })
-
         //Lambda function to run the scheduled task
         const schedulerFunction = new Function(this, "SchedulerLambdaFunction", {
             runtime: Runtime.NODEJS_14_X,
@@ -29,17 +25,5 @@ export class CdkLambdaCronStack extends cdk.Stack {
         //Trigger the lambda function
         cronRule.addTarget(new LambdaFunction(schedulerFunction));
 
-
-        const schedulerFunction2 = new Function(this, "SchedulerLambdaFunction2", {
-            runtime: Runtime.NODEJS_14_X,
-            memorySize: 512,
-            handler: 'cron.handler',
-            code: Code.fromAsset(path.join(__dirname, '../handlers2.zip')),
-           // vpc,
-            // 👇 place lambda in Private Subnets
-            // vpcSubnets: {
-            //     subnetType: ec2.SubnetType.PRIVATE,
-            // },
-        })
     }
 }
